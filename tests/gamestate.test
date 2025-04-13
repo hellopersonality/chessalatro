@@ -1,0 +1,38 @@
+// tests/gameState.test.js
+import GameState from '../src/core/gameState.js';
+
+describe('GameState', () => {
+  beforeEach(() => {
+    GameState.reset();
+  });
+
+  test('initializes with default state', () => {
+    expect(GameState.getBoardSize()).toBe(4);
+    expect(GameState.getGold()).toBe(5);
+    expect(GameState.isPlayerTurn()).toBe(true);
+    expect(GameState.getRound()).toBe(1);
+    expect(GameState.isFirstRound()).toBe(true);
+    expect(GameState.getPlayerPieces()).toHaveLength(1);
+    expect(GameState.getPlayerPieces()[0].type).toBe('king');
+  });
+
+  test('sets and gets gold correctly', () => {
+    GameState.setGold(10);
+    expect(GameState.getGold()).toBe(10);
+    GameState.setGold(-5);
+    expect(GameState.getGold()).toBe(0);
+  });
+
+  test('increments round', () => {
+    GameState.incrementRound();
+    expect(GameState.getRound()).toBe(2);
+  });
+
+  test('resets state', () => {
+    GameState.setGold(20);
+    GameState.incrementRound();
+    GameState.reset();
+    expect(GameState.getGold()).toBe(5);
+    expect(GameState.getRound()).toBe(1);
+  });
+});

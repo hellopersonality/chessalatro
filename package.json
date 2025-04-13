@@ -1,0 +1,16 @@
+{
+  "name": "chessalatro",
+  "version": "1.0.0",
+  "description": "A chess-like strategy game with shop mechanics",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "vite",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "vite": "^5.4.8"
+  }
+}

@@ -1,0 +1,35 @@
+// tests/shop.test.js
+import { Shop } from '../src/core/shop.js';
+import GameState from '../src/core/gameState.js';
+
+describe('Shop', () => {
+  let shop;
+
+  beforeEach(() => {
+    GameState.reset();
+    shop = new Shop();
+  });
+
+  test('generates valid packs', () => {
+    const packs = shop.generatePacks();
+    expect(Object.keys(packs)).toEqual(['pack1', 'pack2', 'pack3']);
+    expect(Object.values(packs).every(pack => GameState.getPacks()[pack])).toBe(true);
+  });
+
+  test('buys pack successfully', () => {
+    GameState.setGold(10);
+    const result = shop.buyPack('pack1');
+    expect(result.success).toBe(true);
+    expect(result.pieces).toHaveLength(3);
+    expect(GameState.getGold()).toBe(5);
+    expect(GameState.getCurrentPackType()).toBe('basic');
+  });
+
+  test('fails to buy pack with insufficient gold', () => {
+    GameState.setGold(2);
+    const result = shop.buyPack('pack1');
+    expect(result.success).toBe(false);
+    expect(result.message).toBe('Not enough gold!');
+    expect(GameState.getGold()).toBe(2);
+  });
+});

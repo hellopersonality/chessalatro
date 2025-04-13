@@ -1,0 +1,239 @@
+/* src/assets/styles.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+}
+
+#intro-screen {
+  text-align: center;
+}
+
+#game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+#board {
+  display: grid;
+  gap: 2px;
+  background-color: #333;
+  padding: 2px;
+}
+
+.square {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.light {
+  background-color: #fff;
+}
+
+.dark {
+  background-color: #769656;
+}
+
+.highlight {
+  background-color: #ffff99 !important;
+}
+
+.selected {
+  border: 2px solid #ff0000;
+}
+
+.piece-image {
+  width: 60px;
+  height: 60px;
+}
+
+#roster {
+  text-align: center;
+}
+
+#roster-grid {
+  display: grid;
+  gap: 2px;
+  background-color: #333;
+  padding: 2px;
+  margin: 0 auto;
+}
+
+.roster-slot {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.roster-light {
+  background-color: #fff;
+}
+
+.roster-dark {
+  background-color: #769656;
+}
+
+.newly-available {
+  background-color: #ccffcc !important;
+}
+
+.roster-piece-image {
+  width: 60px;
+  height: 60px;
+  cursor: move;
+}
+
+.roster-slot .tooltip {
+  visibility: hidden;
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 4px;
+  top: -30px;
+  z-index: 1;
+}
+
+.roster-slot:hover .tooltip {
+  visibility: visible;
+}
+
+.sell-button {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 10px;
+  padding: 2px 4px;
+}
+
+#shop {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.pack {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pack img {
+  width: 80px;
+  height: 80px;
+}
+
+#pack-selection {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.pack-items-container {
+  display: flex;
+  gap: 20px;
+}
+
+.pack-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.pack-item img {
+  width: 60px;
+  height: 60px;
+}
+
+#sell-confirmation {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#restart-button {
+  display: none;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+/* Animations */
+.shake {
+  animation: shake 0.2s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-5px); }
+}
+
+.slide-in {
+  animation: slide-in 0.5s forwards;
+}
+
+@keyframes slide-in {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.slide-out {
+  animation: slide-out 0.5s forwards;
+}
+
+@keyframes slide-out {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(100%); opacity: 0; }
+}
+
+.drop-in {
+  animation: drop-in 0.5s forwards;
+}
+
+@keyframes drop-in {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.drop-out {
+  animation: drop-out 0.5s forwards;
+}
+
+@keyframes drop-out {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-100%); opacity: 0; }
+}
+
+.drag-over {
+  background-color: #99ccff !important;
+}

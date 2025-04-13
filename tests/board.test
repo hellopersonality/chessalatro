@@ -1,0 +1,34 @@
+// tests/board.test.js
+import { Board } from '../src/core/board.js';
+import GameState from '../src/core/gameState.js';
+
+describe('Board', () => {
+  let board;
+
+  beforeEach(() => {
+    GameState.reset();
+    board = new Board();
+    board.initialize(4);
+  });
+
+  test('initializes empty board', () => {
+    const state = board.getState();
+    expect(state).toHaveLength(4);
+    expect(state[0]).toHaveLength(4);
+    expect(state.every(row => row.every(cell => cell === null))).toBe(true);
+  });
+
+  test('sets and gets piece', () => {
+    const piece = { type: 'pawn', player: 'player', hasMoved: false };
+    board.setPiece(0, 0, piece);
+    expect(board.getPiece(0, 0)).toEqual(piece);
+    board.setPiece(0, 0, null);
+    expect(board.getPiece(0, 0)).toBe(null);
+  });
+
+  test('validates position', () => {
+    expect(board.isValidPosition(0, 0)).toBe(true);
+    expect(board.isValidPosition(-1, 0)).toBe(false);
+    expect(board.isValidPosition(4, 0)).toBe(false);
+  });
+});
