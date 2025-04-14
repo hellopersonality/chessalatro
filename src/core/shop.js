@@ -1,56 +1,78 @@
 // src/core/shop.js
 import GameState from './gameState.js';
+import Config from './config.js';
 
 export class Shop {
+  constructor() {
+    if (!Config || !Config.shop || !Config.shop.packs) {
+      console.error('Config.shop.packs is not defined. Using default packs.');
+      GameState.setPacks({
+        basic: { price: 3, pieces: ['pawn', 'pawn', 'knight'] },
+        advanced: { price: 5, pieces: ['bishop', 'rook', 'knight'] },
+        expert: { price: 8, pieces: ['queen', 'rook', 'bishop'] },
+      });
+    } else {
+      GameState.setPacks({
+        basic: Config.shop.packs.basic,
+        advanced: Config.shop.packs.advanced,
+        expert: Config.shop.packs.expert,
+      });
+    }
+  }
+
   generatePacks() {
-    const basePacks = ['basic', 'middle', 'ultra'];
-    const shuffledPacks = [...basePacks].sort(() => Math.random() - 0.5);
-    const shopPacks = {
-      pack1: shuffledPacks[0],
-      pack2: shuffledPacks[1],
-      pack3: shuffledPacks[2],
-    };
-    const packKeys = ['pack1', 'pack2', 'pack3'];
-    const randomPack = packKeys[Math.floor(Math.random() * packKeys.length)];
-    shopPacks[randomPack] = `double_${shopPacks[randomPack]}`;
-    GameState.setShopPacks(shopPacks);
-    return shopPacks;
+    const packs = GameState.getPacks();
+    let result;
+    if (!packs || !packs.basic || !packs.advanced || !packs.expert) {
+      console.warn('Packs not properly initialized. Using default packs.');
+      result = {
+        pack1: { price: 3, pieces: ['pawn', 'pawn', 'knight'] },
+        pack2: { price: 5, pieces: ['bishop', 'rook', 'knight'] },
+        pack3: { price: 8, pieces: ['queen', 'rook', 'bishop'] },
+      };
+    } else {
+      result = {
+        pack1: packs.basic,
+        pack2: packs.advanced,
+        pack3: packs.expert,
+      };
+    }
+    console.log('Generated packs:', result);
+    GameState.setShopPacks(result);
+    console.log('Shop packs after setting:', GameState.getShopPacks());
+    return result;
   }
 
   buyPack(packId) {
-    const shopPacks = GameState.getShopPacks();
-    const packType = shopPacks[packId];
-    const pack = GameState.getPacks()[packType];
-
-    if (GameState.getGold() < pack.cost) {
+    const packs = GameState.getShopPacks();
+    if (!packs) {
+      console.error('Shop packs not initialized. Cannot buy pack.');
+      return { success: false, message: 'Shop not initialized!' };
+    }
+    const pack = packs[packId];
+    if (!pack) return { success: false, message: 'Invalid pack!' };
+    const gold = GameState.getGold();
+    if (gold < pack.price) {
       return { success: false, message: 'Not enough gold!' };
     }
-
-    if (GameState.getCurrentPackType()) {
-      return { success: false, message: 'Another pack is being processed!' };
-    }
-
-    GameState.setGold(GameState.getGold() - pack.cost);
-    GameState.setCurrentPackType(packType);
-    GameState.setSelectionsRemaining(pack.double ? 2 : 1);
-
-    const packPieces = [];
-    for (let i = 0; i < 3; i++) {
-      const randomIndex = Math.floor(Math.random() * pack.pieces.length);
-      packPieces.push(pack.pieces[randomIndex]);
-    }
-
-    return { success: true, pieces: packPieces };
+    GameState.setGold(gold - pack.price);
+    GameState.setCurrentPackType(packId);
+    return { success: true, pieces: pack.pieces };
   }
 
   selectPiece(type) {
-    const selectionsRemaining = GameState.getSelectionsRemaining();
-    GameState.setSelectionsRemaining(selectionsRemaining - 1);
-    return { type, selectionsRemaining: selectionsRemaining - 1 };
+    const packType = GameState.getCurrentPackType();
+    const packs = GameState.getPacks();
+    const pack = packs[packType];
+    const remainingPieces = pack.pieces.filter(p => p !== type);
+    GameState.setPacks({
+      ...packs,
+      [packType]: { ...pack, pieces: remainingPieces },
+    });
+    return { selectionsRemaining: remainingPieces.length };
   }
 
   skipPackSelection() {
     GameState.setCurrentPackType(null);
-    GameState.setSelectionsRemaining(1);
   }
 }

@@ -26,9 +26,13 @@ export class Game {
     this.state.setPermadeathMode(permadeath);
     this.state.reset();
     this.board.initialize(this.state.getBoardSize());
-    animateSlideOut(this.dom.introScreen);
+    if (this.dom.introScreen) {
+      animateSlideOut(this.dom.introScreen);
+    }
     setTimeout(() => {
-      this.dom.gameContainer.style.display = 'flex';
+      if (this.dom.gameContainer) {
+        this.dom.gameContainer.style.display = 'flex';
+      }
       renderBoard(this.board.getState(), this.dom.board);
       renderRoster(this.state.getPlayerPieces(), this.dom.rosterGrid, (row, col) => this.showSellConfirmation(row, col));
       renderStatus(this.state, this.dom);
@@ -40,7 +44,9 @@ export class Game {
     this.board.movePiece(fromRow, fromCol, toRow, toCol);
     this.state.clearSelectedPiece();
     renderBoard(this.board.getState(), this.dom.board);
-    animateShake(this.dom.board);
+    if (this.dom.board) {
+      animateShake(this.dom.board);
+    }
     if (!this.checkWin()) {
       this.state.setPlayerTurn(false);
       renderStatus(this.state, this.dom);
@@ -64,14 +70,22 @@ export class Game {
   }
 
   showShop() {
-    animateDropOut(this.dom.board);
+    if (this.dom.board) {
+      animateDropOut(this.dom.board);
+    }
     setTimeout(() => {
       const packs = this.shop.generatePacks();
       renderShop(packs, this.dom.shop, packId => this.buyPack(packId));
       renderRoster(this.state.getPlayerPieces(), this.dom.rosterGrid, (row, col) => this.showSellConfirmation(row, col));
-      animateSlideIn(this.dom.shop);
-      animateSlideIn(this.dom.roster);
-      this.dom.status.textContent = 'Shop Phase';
+      if (this.dom.shop) {
+        animateSlideIn(this.dom.shop);
+      }
+      if (this.dom.roster) {
+        animateSlideIn(this.dom.roster);
+      }
+      if (this.dom.status) {
+        this.dom.status.textContent = 'Shop Phase';
+      }
     }, 500);
   }
 
@@ -82,10 +96,14 @@ export class Game {
       return;
     }
     renderStatus(this.state, this.dom);
-    animateSlideOut(this.dom.shop);
+    if (this.dom.shop) {
+      animateSlideOut(this.dom.shop);
+    }
     setTimeout(() => {
       renderPackSelection(result.pieces, this.dom.packSelection, piece => this.selectPackPiece(piece));
-      animateSlideIn(this.dom.packSelection);
+      if (this.dom.packSelection) {
+        animateSlideIn(this.dom.packSelection);
+      }
     }, 500);
   }
 
@@ -93,7 +111,9 @@ export class Game {
     this.roster.addPiece(type, 'player');
     const result = this.shop.selectPiece(type);
     renderRoster(this.state.getPlayerPieces(), this.dom.rosterGrid, (row, col) => this.showSellConfirmation(row, col));
-    animateShake(this.dom.roster);
+    if (this.dom.roster) {
+      animateShake(this.dom.roster);
+    }
     if (result.selectionsRemaining > 0) {
       const availablePieces = this.state.getPacks()[this.state.getCurrentPackType()].pieces;
       renderPackSelection(availablePieces, this.dom.packSelection, piece => this.selectPackPiece(piece));
@@ -103,11 +123,15 @@ export class Game {
   }
 
   returnToShop() {
-    animateSlideOut(this.dom.packSelection);
+    if (this.dom.packSelection) {
+      animateSlideOut(this.dom.packSelection);
+    }
     setTimeout(() => {
       this.shop.skipPackSelection();
       renderShop(this.state.getShopPacks(), this.dom.shop, packId => this.buyPack(packId));
-      animateSlideIn(this.dom.shop);
+      if (this.dom.shop) {
+        animateSlideIn(this.dom.shop);
+      }
     }, 500);
   }
 
@@ -119,8 +143,12 @@ export class Game {
     }
     const sellValue = Math.floor(this.state.getPieceValues()[piece.type] / 2);
     this.pendingSell = { row, col, sellValue };
-    this.dom.sellConfirmationText.textContent = `Are you sure you want to sell your ${piece.type.charAt(0).toUpperCase() + piece.type.slice(1)} for ${sellValue} Gold?`;
-    this.dom.sellConfirmationDiv.style.display = 'flex';
+    if (this.dom.sellConfirmationText) {
+      this.dom.sellConfirmationText.textContent = `Are you sure you want to sell your ${piece.type.charAt(0).toUpperCase() + piece.type.slice(1)} for ${sellValue} Gold?`;
+    }
+    if (this.dom.sellConfirmationDiv) {
+      this.dom.sellConfirmationDiv.style.display = 'flex';
+    }
   }
 
   confirmSell() {
@@ -130,26 +158,36 @@ export class Game {
     if (result.success) {
       renderRoster(this.state.getPlayerPieces(), this.dom.rosterGrid, (r, c) => this.showSellConfirmation(r, c));
       renderStatus(this.state, this.dom);
-      animateShake(this.dom.roster);
+      if (this.dom.roster) {
+        animateShake(this.dom.roster);
+      }
     }
     this.cancelSell();
   }
 
   cancelSell() {
-    this.dom.sellConfirmationDiv.style.display = 'none';
+    if (this.dom.sellConfirmationDiv) {
+      this.dom.sellConfirmationDiv.style.display = 'none';
+    }
     this.pendingSell = null;
   }
 
   handleRosterDrop(fromRow, fromCol, toRow, toCol) {
     if (this.roster.rearrangePieces('player', fromRow, fromCol, toRow, toCol)) {
       renderRoster(this.state.getPlayerPieces(), this.dom.rosterGrid, (row, col) => this.showSellConfirmation(row, col));
-      animateShake(this.dom.roster);
+      if (this.dom.roster) {
+        animateShake(this.dom.roster);
+      }
     }
   }
 
   continueGame() {
-    animateSlideOut(this.dom.shop);
-    animateSlideOut(this.dom.roster);
+    if (this.dom.shop) {
+      animateSlideOut(this.dom.shop);
+    }
+    if (this.dom.roster) {
+      animateSlideOut(this.dom.roster);
+    }
     setTimeout(() => {
       if (!this.state.isFirstRound()) {
         this.state.setBoardSize(this.state.getBoardSize() + 1);
@@ -164,14 +202,20 @@ export class Game {
       this.placePiecesOnBoard();
       renderBoard(this.board.getState(), this.dom.board);
       renderStatus(this.state, this.dom);
-      animateDropIn(this.dom.board);
-      this.dom.gameContainer.style.display = 'flex';
+      if (this.dom.board) {
+        animateDropIn(this.dom.board);
+      }
+      if (this.dom.gameContainer) {
+        this.dom.gameContainer.style.display = 'flex';
+      }
       if (this.checkWin()) return;
     }, 500);
   }
 
   skipPackSelection() {
-    animateSlideOut(this.dom.packSelection);
+    if (this.dom.packSelection) {
+      animateSlideOut(this.dom.packSelection);
+    }
     setTimeout(() => {
       this.shop.skipPackSelection();
       this.continueGame();
@@ -214,24 +258,40 @@ export class Game {
     }
 
     if (!playerKing) {
-      this.dom.status.textContent = 'AI Wins!';
-      this.dom.restartButton.style.display = 'block';
+      if (this.dom.status) {
+        this.dom.status.textContent = 'AI Wins!';
+      }
+      if (this.dom.restartButton) {
+        this.dom.restartButton.style.display = 'block';
+      }
       return true;
     }
     if (!aiKing) {
-      this.dom.status.textContent = 'Player Wins!';
-      this.dom.restartButton.style.display = 'block';
+      if (this.dom.status) {
+        this.dom.status.textContent = 'Player Wins!';
+      }
+      if (this.dom.restartButton) {
+        this.dom.restartButton.style.display = 'block';
+      }
       return true;
     }
     return false;
   }
 
   restart() {
-    animateDropOut(this.dom.board);
+    if (this.dom.board) {
+      animateDropOut(this.dom.board);
+    }
     setTimeout(() => {
-      this.dom.gameContainer.style.display = 'none';
-      this.dom.introScreen.style.display = 'flex';
-      this.dom.restartButton.style.display = 'none';
+      if (this.dom.gameContainer) {
+        this.dom.gameContainer.style.display = 'none';
+      }
+      if (this.dom.introScreen) {
+        this.dom.introScreen.style.display = 'flex';
+      }
+      if (this.dom.restartButton) {
+        this.dom.restartButton.style.display = 'none';
+      }
       this.state.reset();
       this.board.initialize(this.state.getBoardSize());
       renderStatus(this.state, this.dom);

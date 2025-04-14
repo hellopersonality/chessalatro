@@ -13,41 +13,42 @@
     <button id="start-permadeath">Start Permadeath Mode</button>
   </div>
   <div id="game-container" style="display: none;">
-    <div id="status">Player's Turn</div>
-    <div id="currency">Gold: 5</div>
-    <div id="ai-currency">AI Gold: 5</div>
-    <div id="round">Round: 1</div>
-    <div id="board"></div>
-    <div id="roster">
-      <h2>Roster</h2>
+    <div id="status-container">
+      <div id="status"></div>
+      <div id="currency"></div>
+      <div id="ai-currency"></div>
+      <div id="round"></div>
+    </div>
+    <div id="game-content">
+      <div id="board" class="board"></div>
       <div id="roster-grid"></div>
-    </div>
-    <div id="shop" style="display: none;">
-      <h2>Shop</h2>
-      <div class="pack" id="pack1">
-        <img id="pack1-img" alt="Pack 1">
-        <span id="pack1-text"></span>
-        <button id="buy-pack1">Buy</button>
+      <div id="shop" style="display: none;">
+        <h2>Shop</h2>
+        <div class="pack" id="pack1">
+          <img id="pack1-img" alt="Pack 1">
+          <span id="pack1-text"></span>
+          <button id="buy-pack1">Buy</button>
+        </div>
+        <div class="pack" id="pack2">
+          <img id="pack2-img" alt="Pack 2">
+          <span id="pack2-text"></span>
+          <button id="buy-pack2">Buy</button>
+        </div>
+        <div class="pack" id="pack3">
+          <img id="pack3-img" alt="Pack 3">
+          <span id="pack3-text"></span>
+          <button id="buy-pack3">Buy</button>
+        </div>
+        <button id="continue-button">Continue</button>
       </div>
-      <div class="pack" id="pack2">
-        <img id="pack2-img" alt="Pack 2">
-        <span id="pack2-text"></span>
-        <button id="buy-pack2">Buy</button>
+      <div id="pack-selection" style="display: none;">
+        <h2>Choose a Piece</h2>
+        <div class="pack-items-container"></div>
+        <button id="skip-pack">Skip</button>
       </div>
-      <div class="pack" id="pack3">
-        <img id="pack3-img" alt="Pack 3">
-        <span id="pack3-text"></span>
-        <button id="buy-pack3">Buy</button>
-      </div>
-      <button id="continue-button">Continue</button>
-    </div>
-    <div id="pack-selection" style="display: none;">
-      <h2 id="pack-selection-title">Select a Piece</h2>
-      <div class="pack-items-container"></div>
-      <button id="skip-pack-button">Skip</button>
     </div>
     <div id="sell-confirmation" style="display: none;">
-      <span id="sell-confirmation-text"></span>
+      <p>Sell this piece?</p>
       <button id="confirm-sell">Yes</button>
       <button id="cancel-sell">No</button>
     </div>

@@ -28,6 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
     round: document.getElementById('round'),
   };
 
+  // Debug log to check if DOM elements are found
+  console.log('packSelection:', dom.packSelection);
+  console.log('shop:', dom.shop);
+
   const game = new Game(dom);
   initInteractions(game, dom);
 });

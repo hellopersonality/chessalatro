@@ -1,37 +1,84 @@
 /* src/assets/styles.css */
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 20px;
+  font-family: Arial, sans-serif;
   background-color: #f0f0f0;
   display: flex;
   justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden; /* Prevent scrolling issues */
 }
 
+/* src/assets/styles.css (excerpt) */
 #intro-screen {
   text-align: center;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+@keyframes slide-in {
+  from { transform: translate(-50%, -100%); }
+  to { transform: translate(-50%, -50%); }
+}
+
+@keyframes slide-out {
+  from { transform: translate(-50%, -50%); }
+  to { transform: translate(-50%, -100%); }
 }
 
 #game-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
   gap: 20px;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+  position: relative; /* Ensure it stays in the flow */
 }
 
-#board {
+/* Add to src/assets/styles.css */
+#status-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#game-content {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+#status, #currency, #ai-currency, #round {
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.board {
   display: grid;
-  gap: 2px;
-  background-color: #333;
-  padding: 2px;
+  border: 2px solid #333;
 }
 
 .square {
   width: 64px;
   height: 64px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
 .light {
@@ -43,7 +90,7 @@ body {
 }
 
 .highlight {
-  background-color: #ffff99 !important;
+  background-color: #ffeb3b;
 }
 
 .selected {
@@ -51,28 +98,24 @@ body {
 }
 
 .piece-image {
-  width: 60px;
-  height: 60px;
-}
-
-#roster {
-  text-align: center;
+  width: 48px;
+  height: 48px;
 }
 
 #roster-grid {
   display: grid;
-  gap: 2px;
-  background-color: #333;
-  padding: 2px;
-  margin: 0 auto;
+  grid-template-columns: repeat(5, 64px);
+  grid-template-rows: repeat(2, 64px);
+  border: 2px solid #333;
+  margin: 20px 0;
 }
 
 .roster-slot {
   width: 64px;
   height: 64px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   position: relative;
 }
 
@@ -84,156 +127,183 @@ body {
   background-color: #769656;
 }
 
-.newly-available {
-  background-color: #ccffcc !important;
-}
-
 .roster-piece-image {
-  width: 60px;
-  height: 60px;
-  cursor: move;
+  width: 48px;
+  height: 48px;
+  pointer-events: none;
 }
 
 .roster-slot .tooltip {
   visibility: hidden;
-  position: absolute;
-  background-color: #333;
+  background-color: #555;
   color: #fff;
+  text-align: center;
+  border-radius: 6px;
   padding: 5px;
-  border-radius: 4px;
-  top: -30px;
+  position: absolute;
   z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .roster-slot:hover .tooltip {
   visibility: visible;
+  opacity: 1;
 }
 
 .sell-button {
   position: absolute;
-  bottom: 2px;
-  right: 2px;
-  font-size: 10px;
-  padding: 2px 4px;
+  bottom: 5px;
+  right: 5px;
+  font-size: 12px;
+  padding: 2px 5px;
+  background-color: #ff4444;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.drag-over {
+  background-color: #ddd;
 }
 
 #shop {
-  display: none;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
   background-color: #fff;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
 }
 
 .pack {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .pack img {
-  width: 80px;
-  height: 80px;
-}
-
-#pack-selection {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  width: 100px;
+  height: 100px;
 }
 
 .pack-items-container {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .pack-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .pack-item img {
-  width: 60px;
-  height: 60px;
+  width: 48px;
+  height: 48px;
 }
 
 #sell-confirmation {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: none;
+  text-align: center;
 }
 
 #restart-button {
-  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   padding: 10px 20px;
   font-size: 16px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: none;
 }
 
-/* Animations */
-.shake {
-  animation: shake 0.2s;
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin: 5px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(-5px); }
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.5s;
+}
+
+@keyframes slide-in {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
 }
 
 .slide-in {
   animation: slide-in 0.5s forwards;
 }
 
-@keyframes slide-in {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+@keyframes slide-out {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100%); }
 }
 
 .slide-out {
   animation: slide-out 0.5s forwards;
 }
 
-@keyframes slide-out {
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(100%); opacity: 0; }
+@keyframes drop-in {
+  from { transform: translateY(-100vh); }
+  to { transform: translateY(0); }
 }
 
 .drop-in {
   animation: drop-in 0.5s forwards;
 }
 
-@keyframes drop-in {
-  from { transform: translateY(-100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+@keyframes drop-out {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100vh); }
 }
 
 .drop-out {
   animation: drop-out 0.5s forwards;
-}
-
-@keyframes drop-out {
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(-100%); opacity: 0; }
-}
-
-.drag-over {
-  background-color: #99ccff !important;
 }

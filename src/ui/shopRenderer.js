@@ -1,57 +1,37 @@
 // src/ui/shopRenderer.js
-import GameState from '../core/gameState.js';
+import { createPieceElement } from '../utils/helpers.js';
 
-export function renderShop(packs, container, buyCallback) {
-  container.style.display = 'flex';
-  container.classList.remove('slide-in', 'slide-out');
-  requestAnimationFrame(() => {
-    container.classList.add('slide-in');
-  });
+export function renderShop(packs, shopDiv, onBuyClick) {
+  shopDiv.style.display = 'flex';
+  const pack1Text = document.getElementById('pack1-text');
+  const pack2Text = document.getElementById('pack2-text');
+  const pack3Text = document.getElementById('pack3-text');
+  const pack1Img = document.getElementById('pack1-img');
+  const pack2Img = document.getElementById('pack2-img');
+  const pack3Img = document.getElementById('pack3-img');
 
-  const packKeys = ['pack1', 'pack2', 'pack3'];
-  packKeys.forEach(packId => {
-    const packType = packs[packId];
-    const packData = GameState.getPacks()[packType];
-    const img = document.getElementById(`${packId}-img`);
-    const text = document.getElementById(`${packId}-text`);
-    const button = document.getElementById(`buy-${packId}`);
+  pack1Img.src = '/src/assets/packs/pack1.png';
+  pack2Img.src = '/src/assets/packs/pack2.png';
+  pack3Img.src = '/src/assets/packs/pack3.png';
 
-    img.src = packData.img;
-    img.alt = packType.replace('double_', '') + (packData.double ? ' Double Pack' : ' Pack');
-    text.textContent = `${packType.replace('double_', '').charAt(0).toUpperCase() + packType.replace('double_', '').slice(1)}${packData.double ? ' Double' : ''} Pack - ${packData.cost} Gold`;
-    button.disabled = false;
-    button.onclick = () => buyCallback(packId);
-  });
+  pack1Text.textContent = `Basic Pack - ${packs.pack1.price} Gold (${packs.pack1.pieces.join(', ')})`;
+  pack2Text.textContent = `Advanced Pack - ${packs.pack2.price} Gold (${packs.pack2.pieces.join(', ')})`;
+  pack3Text.textContent = `Expert Pack - ${packs.pack3.price} Gold (${packs.pack3.pieces.join(', ')})`;
 }
 
-export function renderPackSelection(pieces, container, selectCallback) {
-  container.style.display = 'flex';
-  container.classList.remove('slide-in', 'slide-out');
-  requestAnimationFrame(() => {
-    container.classList.add('slide-in');
-  });
-
-  const title = document.getElementById('pack-selection-title');
-  const packContainer = container.querySelector('.pack-items-container');
-  const selectionsRemaining = GameState.getSelectionsRemaining();
-  title.textContent = GameState.getPacks()[GameState.getCurrentPackType()]?.double
-    ? `Select Pieces (${selectionsRemaining} remaining)`
-    : 'Select a Piece';
-
-  packContainer.innerHTML = '';
+export function renderPackSelection(pieces, packSelectionDiv, onSelectPiece) {
+  packSelectionDiv.style.display = 'flex';
+  const container = packSelectionDiv.querySelector('.pack-items-container');
+  container.innerHTML = '';
   pieces.forEach(piece => {
-    const itemDiv = document.createElement('div');
-    itemDiv.className = 'pack-item';
-    itemDiv.innerHTML = `
-      <img src="./pieces/white/${piece}.png" alt="${piece}">
-      <span>${piece.charAt(0).toUpperCase() + piece.slice(1)}</span>
-      <button class="select-piece-button" data-piece="${piece}">Select</button>
-    `;
-    packContainer.appendChild(itemDiv);
-  });
-
-  packContainer.querySelectorAll('.select-piece-button').forEach(button => {
-    const piece = button.dataset.piece;
-    button.onclick = () => selectCallback(piece);
+    const item = document.createElement('div');
+    item.className = 'pack-item';
+    const pieceElement = createPieceElement({ type: piece, player: 'player' });
+    item.appendChild(pieceElement);
+    const name = document.createElement('span');
+    name.textContent = piece.charAt(0).toUpperCase() + piece.slice(1);
+    item.appendChild(name);
+    item.addEventListener('click', () => onSelectPiece(piece));
+    container.appendChild(item);
   });
 }
